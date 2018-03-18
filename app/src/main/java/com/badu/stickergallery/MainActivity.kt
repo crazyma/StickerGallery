@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun createStickerModelSample(): StickerModel {
         val list = listOf("https://png.icons8.com/color/120/mario.png", "https://png.icons8.com/color/120/mario.png")
-        val model = StickerModel(stickerUrlList = list)
+        val model = StickerModel(R.drawable.abc_ic_arrow_drop_right_black_24dp,stickerUrlList = list)
         return model
     }
 

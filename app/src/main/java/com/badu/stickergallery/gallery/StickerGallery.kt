@@ -1,8 +1,11 @@
 package com.badu.stickergallery.gallery
 
 import android.content.Context
+import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import com.badu.stickergallery.R
 import com.badu.stickergallery.StickerPagerAdapter
@@ -27,6 +30,11 @@ class StickerGallery @JvmOverloads constructor(
                 }
                 val adapter = StickerPagerAdapter(list)
                 stickerViewPager.adapter = adapter
+
+                addStickerBarIcon(value)
+            }else{
+                stickerViewPager.adapter = null
+                stickerBar.removeAllViews()
             }
 
             field = value
@@ -38,6 +46,21 @@ class StickerGallery @JvmOverloads constructor(
 
     private fun inflateLayout() {
         inflate(context!!, R.layout.layout_sticker_gallery, this)
+    }
+
+    private fun addStickerBarIcon(galleryModel: GalleryModel){
+        (0 until galleryModel.stickerModelList.size)
+                .map {
+                    ImageView(context).apply {
+                        setBackgroundResource(android.R.color.holo_green_light)
+
+                        val size = resources.getDimensionPixelSize(R.dimen.bar_height)
+                        layoutParams = LinearLayout.LayoutParams(size, size)
+
+                        setImageResource(galleryModel.stickerModelList[it].iconId)
+                    }
+                }
+                .forEach { stickerBar.addView(it) }
     }
 
 }
