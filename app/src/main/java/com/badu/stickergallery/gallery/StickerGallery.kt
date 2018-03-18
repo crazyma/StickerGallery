@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.layout_sticker_gallery.view.*
 class StickerGallery @JvmOverloads constructor(
         context: Context,
         private val attrs: AttributeSet? = null
-) : RelativeLayout(context, attrs) {
+) : RelativeLayout(context, attrs), View.OnClickListener {
 
     var galleryModel: GalleryModel? = null
         set(value) {
@@ -44,6 +45,11 @@ class StickerGallery @JvmOverloads constructor(
         inflateLayout()
     }
 
+    override fun onClick(view: View?) {
+        val index = view!!.tag as Int
+        stickerViewPager.currentItem = index
+    }
+
     private fun inflateLayout() {
         inflate(context!!, R.layout.layout_sticker_gallery, this)
     }
@@ -52,12 +58,14 @@ class StickerGallery @JvmOverloads constructor(
         (0 until galleryModel.stickerModelList.size)
                 .map {
                     ImageView(context).apply {
+                        tag = it
                         setBackgroundResource(android.R.color.holo_green_light)
 
                         val size = resources.getDimensionPixelSize(R.dimen.bar_height)
                         layoutParams = LinearLayout.LayoutParams(size, size)
 
                         setImageResource(galleryModel.stickerModelList[it].iconId)
+                        setOnClickListener(this@StickerGallery)
                     }
                 }
                 .forEach { stickerBar.addView(it) }
