@@ -1,7 +1,6 @@
 package com.badu.stickergallery.gallery
 
 import android.content.Context
-import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
@@ -21,28 +20,28 @@ class StickerGallery @JvmOverloads constructor(
         private val attrs: AttributeSet? = null
 ) : RelativeLayout(context, attrs), View.OnClickListener {
 
+    var stickerClickListener: StickerGallery.OnStickerClickListener? = null
     var galleryModel: GalleryModel? = null
-        set(value) {
-            if(value != null) {
-                val stickerUrlList = value.getStickerUrlList()
-                val list = mutableListOf<RecyclerView>()
-                stickerUrlList.forEach {
-                    list.add(StickerPagerView(context!!, it))
-                }
-                val adapter = StickerPagerAdapter(list)
-                stickerViewPager.adapter = adapter
-
-                addStickerBarIcon(value)
-            }else{
-                stickerViewPager.adapter = null
-                stickerBar.removeAllViews()
-            }
-
-            field = value
-        }
 
     init {
         inflateLayout()
+    }
+
+    fun notifyGalleryChanged() {
+        if (galleryModel != null) {
+            val stickerUrlList = galleryModel!!.getStickerUrlList()
+            val list = mutableListOf<RecyclerView>()
+            stickerUrlList.forEach {
+                list.add(StickerPagerView(context!!, it, stickerClickListener))
+            }
+            val adapter = StickerPagerAdapter(list)
+            stickerViewPager.adapter = adapter
+
+            addStickerBarIcon(galleryModel!!)
+        } else {
+            stickerViewPager.adapter = null
+            stickerBar.removeAllViews()
+        }
     }
 
     override fun onClick(view: View?) {
@@ -54,7 +53,7 @@ class StickerGallery @JvmOverloads constructor(
         inflate(context!!, R.layout.layout_sticker_gallery, this)
     }
 
-    private fun addStickerBarIcon(galleryModel: GalleryModel){
+    private fun addStickerBarIcon(galleryModel: GalleryModel) {
         (0 until galleryModel.stickerModelList.size)
                 .map {
                     ImageView(context).apply {
@@ -71,4 +70,7 @@ class StickerGallery @JvmOverloads constructor(
                 .forEach { stickerBar.addView(it) }
     }
 
+    interface OnStickerClickListener {
+        fun onStickerClicked(view: View)
+    }
 }

@@ -2,12 +2,17 @@ package com.badu.stickergallery
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.badu.stickergallery.gallery.GalleryModel
+import com.badu.stickergallery.gallery.StickerGallery
 import com.badu.stickergallery.gallery.StickerModel
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), StickerGallery.OnStickerClickListener {
+    override fun onStickerClicked(view: View) {
+        Log.d("crazyma", "view tag : " + view)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,13 +30,15 @@ class MainActivity : AppCompatActivity() {
         stickerViewPager.visibility = View.VISIBLE
     }
 
-    private fun setupStickerGallery(){
+    private fun setupStickerGallery() {
+        stickerGallery.stickerClickListener = this
         stickerGallery.galleryModel = createGalleryModelSample()
+        stickerGallery.notifyGalleryChanged()
     }
 
     private fun createStickerModelSample(): StickerModel {
         val list = listOf("https://png.icons8.com/color/120/mario.png", "https://png.icons8.com/color/120/mario.png")
-        val model = StickerModel(R.drawable.abc_ic_arrow_drop_right_black_24dp,stickerUrlList = list)
+        val model = StickerModel(R.drawable.abc_ic_arrow_drop_right_black_24dp, stickerUrlList = list)
         return model
     }
 
