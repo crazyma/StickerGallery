@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.badu.stickergallery.gallery.StickerModel
 import kotlinx.android.synthetic.main.item_sticker.view.*
 
 /**
@@ -15,17 +16,23 @@ import kotlinx.android.synthetic.main.item_sticker.view.*
 
 class StickerPagerView @JvmOverloads  constructor(context: Context, private val attrs: AttributeSet? = null): RecyclerView(context) {
 
+    private var stickerUrlList: List<String>? = null
+
     init {
 
+    }
+
+    constructor(context: Context, list: List<String>) : this(context){
+        stickerUrlList = list
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         layoutManager = GridLayoutManager(context, SPAN_COUNT)
-        adapter = StickerAdapter(context)
+        adapter = StickerAdapter(context, stickerUrlList)
     }
 
-    class StickerAdapter(private val context: Context): RecyclerView.Adapter<StickerViewHolder>() {
+    class StickerAdapter(private val context: Context, private var stickerUrlList: List<String>?): RecyclerView.Adapter<StickerViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): StickerViewHolder {
             val layoutInflater = LayoutInflater.from(context)
@@ -35,21 +42,22 @@ class StickerPagerView @JvmOverloads  constructor(context: Context, private val 
             )
         }
 
-        override fun getItemCount(): Int {
-            return 17
+        override fun getItemCount() = when(stickerUrlList){
+            null -> 0
+            else -> stickerUrlList!!.size
         }
 
         override fun onBindViewHolder(holder: StickerViewHolder?, position: Int) {
-            holder!!.bindTo(context)
+            holder!!.bindTo(context,stickerUrlList!![position])
         }
 
     }
 
     class StickerViewHolder(view: View): RecyclerView.ViewHolder(view){
 
-        fun bindTo(context: Context){
+        fun bindTo(context: Context,urlString: String){
             GlideApp.with(context)
-                    .load("https://png.icons8.com/color/120/mario.png")
+                    .load(urlString)
                     .placeholder(R.mipmap.ic_launcher)
                     .into(itemView.stickerImageButton)
 

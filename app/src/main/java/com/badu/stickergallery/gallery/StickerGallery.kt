@@ -1,6 +1,7 @@
 package com.badu.stickergallery.gallery
 
 import android.content.Context
+import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import com.badu.stickergallery.R
@@ -16,17 +17,27 @@ class StickerGallery @JvmOverloads constructor(
         private val attrs: AttributeSet? = null
 ) : RelativeLayout(context, attrs) {
 
+    var galleryModel: GalleryModel? = null
+        set(value) {
+            if(value != null) {
+                val stickerUrlList = value.getStickerUrlList()
+                val list = mutableListOf<RecyclerView>()
+                stickerUrlList.forEach {
+                    list.add(StickerPagerView(context!!, it))
+                }
+                val adapter = StickerPagerAdapter(list)
+                stickerViewPager.adapter = adapter
+            }
+
+            field = value
+        }
+
     init {
         inflateLayout()
     }
 
     private fun inflateLayout() {
         inflate(context!!, R.layout.layout_sticker_gallery, this)
-
-        val list = listOf(StickerPagerView(context!!), StickerPagerView(context!!), StickerPagerView(context!!))
-        val adapter = StickerPagerAdapter(list)
-        stickerViewPager.adapter = adapter
     }
-
 
 }
