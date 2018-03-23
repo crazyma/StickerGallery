@@ -23,11 +23,16 @@ class MainActivity : AppCompatActivity(), StickerGallery.OnStickerClickListener 
     }
 
     private fun showSticker() {
-        val list = listOf(StickerPagerView(this), StickerPagerView(this), StickerPagerView(this))
-        val adapter = StickerPagerAdapter(list)
+        val list = listOf(StickerPagerView(this), StickerPagerView(this), StickerPagerView(this), StickerPagerView(this), StickerPagerView(this), StickerPagerView(this), StickerPagerView(this), StickerPagerView(this), StickerPagerView(this))
+        val adapter = StickerPagerAdapter(this,list)
         stickerViewPager.adapter = adapter
 
         stickerViewPager.visibility = View.VISIBLE
+        tabLayout.setupWithViewPager(stickerViewPager)
+        for(i in 0 until tabLayout.tabCount){
+            val tab = tabLayout.getTabAt(i)
+            tab!!.customView = adapter.getTabView(i)
+        }
     }
 
     private fun setupStickerGallery() {

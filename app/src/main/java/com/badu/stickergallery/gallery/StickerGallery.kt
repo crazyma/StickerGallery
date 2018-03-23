@@ -34,7 +34,7 @@ class StickerGallery @JvmOverloads constructor(
             stickerUrlList.forEach {
                 list.add(StickerPagerView(context!!, it, stickerClickListener))
             }
-            val adapter = StickerPagerAdapter(list)
+            val adapter = StickerPagerAdapter(context, list)
             stickerViewPager.adapter = adapter
 
             addStickerBarIcon(galleryModel!!)
